@@ -1,0 +1,50 @@
+from mpl_toolkits import mplot3d
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+from scipy.interpolate import interp2d
+np.set_printoptions(threshold=np.inf)
+from matplotlib import cm
+
+x=[0.00, 0.2, 0.30, 0.5,0.6] #CTK values
+y=[0.00, 7.00, 28.00, 84.00] #Tor_sigma values
+z=np.array([(20.00,25.61, 25.61, 25.68, 25.5),(25.09, 25.71,25.73, 25.82, 25.73),(24.54,25.6 ,25.62, 25.65, 25.62),(23.77, 25.55, 25.59, 25.62, 25.53)])
+#print(z) #logNH_eq values
+
+ 
+#lx=len(x)
+#ly=len(y)
+#lz=len(z)
+#print(x,y)
+
+#let's calculate logNH_eq for any given number of CTK,TORsigma by interpolating the points
+f =interp2d(x,y,z, kind='linear')
+
+xnew=np.arange(0., 0.606, 0.006)
+ynew=np.arange(0.,84.8,0.84)
+
+znew=f(xnew,ynew)
+
+xnewg, ynewg = np.meshgrid(xnew, ynew)
+
+fig = plt.figure(figsize=(11,9))
+
+ax = plt.axes(projection="3d")
+
+
+p=ax.plot_surface(xnewg, ynewg, znew,rstride=1, cstride=1, cmap=cm.magma, linewidth=0, antialiased=False)
+
+clb= fig.colorbar(p, ax=ax)
+clb.set_label('logNH_eq')
+
+ax.set_xlabel('CTK')
+ax.set_ylabel('Tor$\sigma$')
+ax.set_zlabel('logNH$_{eq}$')    
+
+
+plt.show()    
+   
+#To calculate the value of NH_eq please enter the best-fit Torsigma and CTKcover below:
+logNHeq=f(torsigma,CTK)
+print('logNH_eq=',c)
+print('NH_eq=', 10**logNHeq)
