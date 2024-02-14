@@ -10,12 +10,16 @@ x=[0.00, 0.2, 0.30, 0.5,0.6] #CTK values
 y=[0.00, 7.00, 28.00, 84.00] #Tor_sigma values
 z=np.array([(20.00,25.61, 25.61, 25.68, 25.5),(25.09, 25.71,25.73, 25.82, 25.73),(24.54,25.6 ,25.62, 25.65, 25.62),(23.77, 25.55, 25.59, 25.62, 25.53)]) #logNH_eq values
 
- 
-
 
 #let's calculate logNH_eq for any given number of CTK, TORsigma by interpolating the points
 f =interp2d(x,y,z, kind='linear')
+ 
+#To calculate the value of NH_eq please enter the best-fit CTKcover and Torsigma below:
+logNHeq=f(CTK,Torsigma)
+print('logNH_eq=',c)
+print('NH_eq=', 10**logNHeq)
 
+#To visualize the results in 3D
 xnew=np.arange(0., 0.606, 0.0006)
 ynew=np.arange(0.,84.8,0.084)
 
@@ -39,8 +43,3 @@ ax.set_zlabel('logNH$_{eq}$')
 
 
 plt.show()    
-   
-#To calculate the value of NH_eq please enter the best-fit CTKcover and Torsigma below:
-logNHeq=f(CTK,Torsigma)
-print('logNH_eq=',c)
-print('NH_eq=', 10**logNHeq)
