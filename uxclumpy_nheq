@@ -20,8 +20,8 @@ print('logNH_eq=',f)
 print('NH_eq=', 10**logNHeq)
 
 #To visualize the results in 3D
-xnew=np.arange(0., 0.606, 0.0006)
-ynew=np.arange(0.,84.8,0.084)
+xnew=np.arange(0., 0.606, 0.006)
+ynew=np.arange(0.,84.8,0.84)
 
 znew=f(xnew,ynew)
 
