@@ -16,7 +16,7 @@ f =interp2d(x,y,z, kind='linear')
  
 #To calculate the value of NH_eq please enter the best-fit CTKcover and Torsigma below:
 logNHeq=f(CTK,Torsigma)
-print('logNH_eq=',c)
+print('logNH_eq=',f)
 print('NH_eq=', 10**logNHeq)
 
 #To visualize the results in 3D
