@@ -2,44 +2,51 @@ from mpl_toolkits import mplot3d
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-from scipy.interpolate import interp2d
+from scipy.interpolate import RegularGridInterpolator
 np.set_printoptions(threshold=np.inf)
 from matplotlib import cm
 
-x=[0.00, 0.2, 0.30, 0.5,0.6] #CTK values
-y=[0.00, 7.00, 28.00, 84.00] #Tor_sigma values
-z=np.array([(20.00,25.61, 25.61, 25.68, 25.5),(25.09, 25.71,25.73, 25.82, 25.73),(24.54,25.6 ,25.62, 25.65, 25.62),(23.77, 25.55, 25.59, 25.62, 25.53)]) #logNH_eq values
+x = [0.00, 0.2, 0.30, 0.5, 0.6]  # CTK values
+y = [0.00, 7.00, 28.00, 84.00]   # Tor_sigma values
+z = np.array([
+    (20.00, 25.61, 25.61, 25.68, 25.5),
+    (25.09, 25.71, 25.73, 25.82, 25.73),
+    (24.54, 25.6 , 25.62, 25.65, 25.62),
+    (23.77, 25.55, 25.59, 25.62, 25.53)
+])  # logNH_eq values
 
+# Using RegularGridInterpolator for 2D interpolation
+f = RegularGridInterpolator((y, x), z, method='linear', bounds_error=False, fill_value=None)
 
-#let's calculate logNH_eq for any given number of CTK, TORsigma by interpolating the points
-f =interp2d(x,y,z, kind='linear')
- 
-#To calculate the value of NH_eq please enter the best-fit CTKcover and Torsigma below:
-logNHeq=f(CTK,Torsigma)
-print('logNH_eq=',f)
+# To calculate the value of NH_eq please enter the best-fit CTKcover and Torsigma below:
+logNHeq = f((27.23, 0.21))  # Note that the input needs to be in the form of (y, x)
+print('logNH_eq=', logNHeq)
 print('NH_eq=', 10**logNHeq)
 
-#To visualize the results in 3D
-xnew=np.arange(0., 0.606, 0.006)
-ynew=np.arange(0.,84.8,0.84)
+# To visualize the results in 3D
+xnew = np.arange(0., 0.606, 0.006)
+ynew = np.arange(0., 84.8, 0.84)
 
-znew=f(xnew,ynew)
-
+# Creating a grid of (y, x) values
 xnewg, ynewg = np.meshgrid(xnew, ynew)
 
-fig = plt.figure(figsize=(11,9))
+# Interpolating the grid points
+points = np.vstack((ynewg.ravel(), xnewg.ravel())).T  # Reshaping the grid into (y, x) pairs
+znew = f(points).reshape(ynewg.shape)
 
+fig = plt.figure(figsize=(11,9))
 ax = plt.axes(projection="3d")
 
+# Plotting the surface
+p = ax.plot_surface(xnewg, ynewg, znew, rstride=1, cstride=1, cmap=cm.magma, linewidth=0, antialiased=False)
 
-p=ax.plot_surface(xnewg, ynewg, znew,rstride=1, cstride=1, cmap=cm.magma, linewidth=0, antialiased=False)
-
-clb= fig.colorbar(p, ax=ax)
+# Adding a color bar
+clb = fig.colorbar(p, ax=ax)
 clb.set_label('logNH_eq')
 
+# Setting labels
 ax.set_xlabel('CTK')
 ax.set_ylabel('Tor$\sigma$')
-ax.set_zlabel('logNH$_{eq}$')    
+ax.set_zlabel('logNH$_{eq}$')
 
-
-plt.show()    
+plt.show()
